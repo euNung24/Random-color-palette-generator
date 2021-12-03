@@ -27,7 +27,7 @@ const App = () => {
   }, []);
 
   const getColors = useCallback(() => {
-    const url = "http://colormind.io/api/";  
+    const url = "https://cors-everywhere.herokuapp.com/http://colormind.io/api/";  
     const http = new XMLHttpRequest();
     const data = { model : "default" };
     http.onreadystatechange = function() {
