@@ -1,7 +1,7 @@
-import React, { useCallback, useEffect, useState } from 'react';
-import { createGlobalStyle } from 'styled-components';
-import ColorPalette from './ColorPalette';
-import Explain from './Explain';
+import React, { useCallback, useEffect, useState } from "react";
+import { createGlobalStyle } from "styled-components";
+import ColorPalette from "./ColorPalette";
+import Explain from "./Explain";
 
 const GlobalStyle = createGlobalStyle`
   body {
@@ -16,34 +16,32 @@ const App = () => {
 
   useEffect(() => {
     getColors();
-    window.addEventListener('keypress', (e) => {
-      if(e.code === "Space") {
-        getColors();  
+    window.addEventListener("keypress", (e) => {
+      if (e.code === "Space") {
+        getColors();
       } else {
-        return
+        return;
       }
     });
-    return
+    return;
   }, []);
 
   const getColors = useCallback(() => {
-    const url = "https://cors-everywhere.herokuapp.com/http://colormind.io/api/";  
-    const http = new XMLHttpRequest();
-    const data = { model : "default" };
-    http.onreadystatechange = function() {
-      if(http.readyState == 4 && http.status == 200) {
-        const palette = JSON.parse(http.responseText).result;
-        setColors(prev => [...palette]);
-      }
-    }
-    http.open("POST", url, true);
-    http.send(JSON.stringify(data));  
-  }, [])
+    fetch("https://cors-everywhere.herokuapp.com/http://colormind.io/api/", {
+      method: "POST",
+      body: JSON.stringify({ model: "default" }),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        const palette = data.result;
+        setColors([...palette]);
+      });
+  }, []);
 
   return (
     <>
       <GlobalStyle />
-      <ColorPalette colors={colors} getColors={getColors}/>
+      <ColorPalette colors={colors} getColors={getColors} />
       <Explain colors={colors} />
     </>
   );
